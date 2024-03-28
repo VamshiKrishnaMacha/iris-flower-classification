@@ -39,3 +39,73 @@ knn.fit(X_train, y_train)
 
 # Predict on the test data
 y_pred = knn.predict(X_test)
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+
+# Calculate the accuracy
+accuracy = accuracy_score(y_test, y_pred)
+
+# Generate a classification report
+class_report = classification_report(y_test, y_pred, target_names=le.classes_)
+
+# Create a confusion matrix
+conf_matrix = confusion_matrix(y_test, y_pred)
+
+# Print out the results
+print(f"Accuracy: {accuracy * 100:.2f}%")
+print("\nClassification Report:\n", class_report)
+print("\nConfusion Matrix:\n", conf_matrix)
+from sklearn.model_selection import cross_val_score
+
+# Using the k-NN model as an example
+knn_cv = KNeighborsClassifier(n_neighbors=3)
+
+# 10-fold cross-validation
+cv_scores = cross_val_score(knn_cv, X, y, cv=10)
+
+print(f"CV Scores: {cv_scores}")
+print(f"CV Average Score: {cv_scores.mean():.4f}")
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+
+# Initialize the models
+models = {
+    "k-NN": KNeighborsClassifier(n_neighbors=3),
+    "Decision Tree": DecisionTreeClassifier(),
+    "SVM": SVC(),
+    "Random Forest": RandomForestClassifier()
+}
+
+# Compare models using cross-validation
+for name, model in models.items():
+    cv_scores = cross_val_score(model, X, y, cv=10)
+    print(f"{name} Accuracy: {cv_scores.mean():.4f}")
+from sklearn.model_selection import GridSearchCV
+
+# Grid search for k-NN
+param_grid = {'n_neighbors': np.arange(1, 30)}
+knn_gs = GridSearchCV(KNeighborsClassifier(), param_grid, cv=10)
+knn_gs.fit(X, y)
+
+print(f"Best parameters: {knn_gs.best_params_}")
+print(f"Best score: {knn_gs.best_score_:.4f}")
+rf = RandomForestClassifier(n_estimators=100)
+rf.fit(X_train, y_train)
+
+# Extracting feature importance
+importances = rf.feature_importances_
+features = X.columns
+indices = np.argsort(importances)[::-1]
+
+# Visualizing the feature importance
+plt.figure(figsize=(10, 7))
+plt.title('Feature Importance in Predicting Iris Species')
+plt.bar(range(X_train.shape[1]), importances[indices], color="r", align="center")
+plt.xticks(range(X_train.shape[1]), features[indices], rotation=90)
+plt.xlim([-1, X_train.shape[1]])
+plt.show()
+import plotly.express as px
+
+# Interactive scatter plot of sepal length vs. sepal width
+fig = px.scatter(iris_data, x="SepalLengthCm", y="SepalWidthCm", color="Species", title="Sepal Length vs. Sepal Width by Species")
+fig.show()
