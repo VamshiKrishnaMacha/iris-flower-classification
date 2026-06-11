@@ -1,0 +1,13 @@
+# Core data science
+numpy==1.26.4
+pandas==2.2.2
+
+# Machine learning
+scikit-learn==1.5.1
+
+# Visualization
+matplotlib==3.9.0
+plotly==5.22.0
+
+# Jupyter (for running the notebook)
+jupyter==1.0.0
